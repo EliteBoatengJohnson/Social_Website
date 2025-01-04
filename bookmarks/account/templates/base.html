@@ -1,42 +1,40 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-    <html>
-        <head>
-        <title> {% block title %}{% endblock %}</title>
+    <head>
+        <title>{% block title %}{% endblock %}</title>
         <link href="{% static 'css/base.css' %}" rel="stylesheet">
-        </head>
-        <body>
-            <div id="header">
-                <span class="logo">Bookmarks</span>
-                <ul class="menu">
-                  <li  {% if  section =="dashboard" %} class="selected"{% endif %}>
+    </head>
+    <body>
+        <div id="header">
+            <span class="logo">Bookmarks</span>
+            <ul class="menu">
+                <li {% if section == "dashboard" %}class="selected"{% endif %}>
                     <a href="{% url "dashboard" %}">Dashboard</a>
-                    </li>
-                    <li {% if  section =="images" %} class="selected"{% endif %}>
-                        <a href="">Images</a>
-                    </li>
-                    <li {% if  section =="people" %} class="selected">
-                        <a href="#">People</a>
-                    </li>
-                </ul>  
-                {% endif %}
-                <span class="user">
-                    {% if user.is_authenticated %}
-                    Hello, {{ user.username }}.,
-                    <form action="{% url "logout" %}" method="post" style="display: inline;">
+                </li>
+                <li {% if section == "images" %}class="selected"{% endif %}>
+                    <a href="">Images</a>
+                </li>
+                <li {% if section == "people" %}class="selected"{% endif %}>
+                    <a href="#">People</a>
+                </li>
+            </ul>
+            <span class="user">
+                {% if user.is_authenticated %}
+                    Hello, {{ request.user.first_name|default:request.user.username }}.,
+                    <form action="{% url "logout" %}" method="post" >
+                       
+                        <button type="submit" >logout</button>
                         {% csrf_token %}
-                        <input type="submit" value="log-out" />
                     </form> 
-                    {% else %}      
-                    <a href="{% url "logout" %}">log-out</a>
-                    {% else %}
+                {% else %}
                     <a href="{% url "login" %}">log-in</a>
-                    {% endif %}
-
-            </div>
-            <div id="content">
-                {% block content %}
-                {% endblock %}
-            </div>    
-    </html>
+                {% endif %}
+            </span>
+        </div>
+        <div id="content">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </body>
+</html>
