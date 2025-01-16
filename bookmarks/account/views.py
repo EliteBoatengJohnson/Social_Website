@@ -5,6 +5,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from .forms import (LoginForm, UserRegistrationForm,ProfileEditForm, UserEditForm)
 from .models import Profile
+from django.contrib import messages
 # Create your views here.
 
 @login_required
@@ -45,7 +46,7 @@ def register(request):
         user_form = UserRegistrationForm()
     return render(request, 'account/register.html', {'user_form': user_form})
 
-
+# submitting forms with files
 @login_required
 def edit(request):
     if request.method =="POST":
@@ -54,6 +55,11 @@ def edit(request):
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()
+           
+            messages.success(request, "Profile updated successfully")
+        else:
+            messages.error(request, "Error updating your profile")
+                
     else:
         user_form = UserEditForm(instance=request.user)
         profile_form = ProfileEditForm(instance=request.user.profile) 
